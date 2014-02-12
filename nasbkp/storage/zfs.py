@@ -1,3 +1,5 @@
+# coding=utf-8
+
 # Copyright (C) 2014, Alexandre Vaissière
 #
 # Permission to use, copy, modify, and/or distribute this software for any
@@ -14,6 +16,20 @@
 
 """Commands for manipulating a zfs filesystem."""
 
+from __future__ import unicode_literals
+
+import subprocess
+
+
+class Cmd(object):
+    """Tiny wrapper around a command, to have logging for free."""
+
+    def __init__(self, cmd, **kwargs):
+        self.cmd = cmd
+
+    def __str__(self):
+        return ' '.join(self.cmd)
+
 
 class Zfs(object):
     def __init__(self, volume):
@@ -25,5 +41,6 @@ class Zfs(object):
 
     def create_snapshot(self, name):
         """Creates a new snapshot on this volume."""
-        pass
+        subprocess.check_output(['zfs', 'snapshot', self.volume + '@' + name], shell=False)
+        # TODO check result
 
